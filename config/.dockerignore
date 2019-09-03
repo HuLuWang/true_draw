@@ -1,0 +1,5 @@
+.git
+.dockerignore
+Gemfile.lock
+deploy
+README.md
