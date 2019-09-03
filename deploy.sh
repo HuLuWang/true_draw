@@ -1,6 +1,5 @@
 #! /bin/bash
 app=$1
-cd /root/workspace/
 if [ ! -d "${app}" ];then
     echo "克隆项目${app}"
     git clone -b $app git@github.com:HuLuWang/wang_projiect.git $app
