@@ -1,0 +1,17 @@
+default: &default
+  host: 127.0.0.1
+  port: 6379
+  password:
+  db: 0
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+staging:
+  <<: *default
+
+production:
+  <<: *default

@@ -1,0 +1,22 @@
+development:
+  app_id: wxcff9ac0fa9bf3805
+  secret: 1a1a87147ce148bd57c87ab5cb899641
+  token: 21cc7e4e93b5d813281be8f0ec83aaa9
+
+test:
+  app_id: wxcff9ac0fa9bf3805
+  secret: 1a1a87147ce148bd57c87ab5cb899641
+  token: 21cc7e4e93b5d813281be8f0ec83aaa9
+
+staging:
+  app_id: wxcff9ac0fa9bf3805
+  secret: 1a1a87147ce148bd57c87ab5cb899641
+  token: 21cc7e4e93b5d813281be8f0ec83aaa9
+
+production:
+  app_id: <%= ENV['SZ_ACTIVITY_WECHAT_APP_ID'] %>
+  secret: <%= ENV['SZ_ACTIVITY_WECHAT_SECRET'] %>
+  token: <%= ENV['SZ_ACTIVITY_WECHAT_TOKEN'] %>
+
+
+
