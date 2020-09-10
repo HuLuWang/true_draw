@@ -1,6 +1,11 @@
 class LotteriesController < ApplicationController
   before_action :lottery_params_check, only: %(create, edit)
 
+  # 列表
+  def index
+
+  end
+
   # 创建
   def create
     lottery_id = Lottery.generate(params)
@@ -42,6 +47,29 @@ class LotteriesController < ApplicationController
     render json: {code: 400, msg: "活动非开始状态"} and return unless lottery.start?
     LotteryUser.generate({member_user_id: @member_user.id, lottery_id: params[:id]})
     render json: {code: 200, msg: "success"}
+  end
+
+  # 我参与的列表
+  def part_list
+    list = @member_user.part_lotteries.map do |l|
+      {
+          id:    l.id,
+          title: l.title
+      }
+    end
+    render json: {code: 200, msg: "success", data: {list: list}}
+  end
+
+  # 我创建的列表
+  def my_list
+    list = @member_user.owner_lotteries.map do |l|
+      {
+          id:    l.id,
+          title: l.title,
+          state: l.state
+      }
+    end
+    render json: {code: 200, msg: "success", data: {list: list}}
   end
 
   private

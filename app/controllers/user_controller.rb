@@ -24,29 +24,4 @@ class UserController < ApplicationController
     Rails.logger.error "#{e.class.name}: #{e.message}"
     render json: {code: 500, msg: "微信授权验证失败"}
   end
-
-  # 我参与的列表
-  def part_list
-    list = @member_user.part_lotteries.map do |l|
-      {
-          id:    l.id,
-          title: l.title
-      }
-    end
-    render json: {code: 200, msg: "success", data: {list: list}}
-  end
-
-  # 我创建的列表
-  def owner_list
-    list = @member_user.owner_lotteries.map do |l|
-      {
-          id:    l.id,
-          title: l.title,
-          state: l.state
-      }
-    end
-    render json: {code: 200, msg: "success", data: {list: list}}
-  end
-
-
 end

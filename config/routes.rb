@@ -13,5 +13,22 @@ Rails.application.routes.draw do
   end if Rails.env.production?
   mount Sidekiq::Web => '/sidekiq'
 
+  namespace :api do
+    resources :lotteries, only: [:index, :create, :show] do
+      collection do
+        put :edit
+        delete :delete
+        post :part_in
+        get :part_list
+        get :my_list
+      end
+    end
+
+    resources :user, only: [] do
+      collection do
+        post :user_oauth
+      end
+    end
+  end
 
 end
