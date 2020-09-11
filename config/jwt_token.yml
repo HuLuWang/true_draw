@@ -1,15 +1,11 @@
 development:
   algorithm: HS512
-  secret: a7df898169174b0a8c383a2dd2197d84
+  secret: true$$draw
 
 test:
   algorithm: HS512
-  secret: a7df898169174b0a8c383a2dd2197d84
-
-staging:
-  algorithm: HS512
-  secret: a7df898169174b0a8c383a2dd2197d84
+  secret: true$$draw
 
 production:
   algorithm: HS512
-  secret: f3c37d29dd7f474bbc6d78aec97e63b1
+  secret: true$$draw

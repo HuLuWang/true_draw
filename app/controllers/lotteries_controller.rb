@@ -1,5 +1,6 @@
 class LotteriesController < ApplicationController
-  before_action :lottery_params_check, only: %(create, edit)
+  skip_before_action :authenticate!, only: %w(index )
+  before_action :lottery_params_check, only: %w(create edit)
 
   # 列表
   def index
@@ -8,7 +9,8 @@ class LotteriesController < ApplicationController
 
   # 创建
   def create
-    lottery_id = Lottery.generate(params)
+    option = params.merge!({user_id: @user.id})
+    lottery_id = Lottery.generate(option)
     render json: {code: 400, msg: "新建抽奖活动失败"} and return if lottery_id.nil?
     render json: {code: 200, msg: "success", data: {id: lottery_id}}
   end
@@ -22,7 +24,7 @@ class LotteriesController < ApplicationController
   # 删除
   # 真删除
   def delete
-    lottery = Lottery.where(id: params[:id], created_by: @member_user.id).first
+    lottery = Lottery.where(id: params[:id], created_by: @user.id).first
     lottery.destroy!
     render json: {code: 200, msg: "success", data: {id: params[:id]}}
   end
@@ -31,7 +33,7 @@ class LotteriesController < ApplicationController
   # 活动图 标题 状态 开奖时间 发起人 内容 奖品 中奖名单 是否中奖
   def show
     lottery = Lottery.find params[:id]
-    is_winner = lottery.award_users.pluck(:member_user_id).include? @member_user.id
+    is_winner = lottery.award_users.pluck(:user_id).include? @user.id
     info    = lottery.detail_info.merge!(
                                      {
                                          is_winner: is_winner
@@ -45,13 +47,13 @@ class LotteriesController < ApplicationController
   def part_in
     lottery = Lottery.find params[:id]
     render json: {code: 400, msg: "活动非开始状态"} and return unless lottery.start?
-    LotteryUser.generate({member_user_id: @member_user.id, lottery_id: params[:id]})
+    LotteryUser.generate({user_id: @user.id, lottery_id: params[:id]})
     render json: {code: 200, msg: "success"}
   end
 
   # 我参与的列表
   def part_list
-    list = @member_user.part_lotteries.map do |l|
+    list = @user.part_lotteries.map do |l|
       {
           id:    l.id,
           title: l.title
@@ -62,7 +64,7 @@ class LotteriesController < ApplicationController
 
   # 我创建的列表
   def my_list
-    list = @member_user.owner_lotteries.map do |l|
+    list = @user.owner_lotteries.map do |l|
       {
           id:    l.id,
           title: l.title,
@@ -80,24 +82,36 @@ class LotteriesController < ApplicationController
       render json: {code: ErrCode::ParamCheckFail, msg: "活动标题不能为空"} and return
     end
 
-    # 开始时间需超过当前时间半小时
-    if params[:begin_time].to_time < Time.now + 10.minutes
-      render json: {code: ErrCode::ParamCheckFail, msg: "活动开始时间不得早于当前时间10分钟"} and return
-    end
-    # 结束时间不能超过开始时间30天
-    if params[:end_time] > params[:begin_time] + 30.days
-      render json: {code: ErrCode::ParamCheckFail, msg: "开奖时间不能超过开始时间30天"} and return
-    end
     # 奖品不能为空
     if params[:award_list].blank?
       render json: {code: ErrCode::ParamCheckFail, msg: "奖品不能为空"} and return
     end
 
+    if params[:condition].blank?
+      render json: {code: ErrCode::ParamCheckFail, msg: "活动开奖类型不能为空"} and return
+    end
+
+    # 按时开奖校验
+    if params[:condition] == "time"
+      # 结束时间不能超过当前时间30天
+      if params[:lottery_time] > Time.now + 30.days
+        render json: {code: ErrCode::ParamCheckFail, msg: "开奖时间不能超过开始时间30天"} and return
+      end
+    end
+
+    # 按人数开奖校验
+    if params[:condition] == "num"
+      # 参与人数不能小于1
+      if params[:lottery_num] < 1
+        render json: {code: ErrCode::ParamCheckFail, msg: "参与人数不能小于1"} and return
+      end
+    end
+
     # 编辑校验
     if params[:id].present?
-      @lottery = Lottery.where(id: params[:id], created_by: @member_user.id).first
+      @lottery = Lottery.where(id: params[:id], created_by: @user.id).first
       render json: {code: ErrCode::ParamCheckFail, msg: "活动不存在或非本人创建的活动"} and return if @lottery.nil?
-      render json: {code: ErrCode::ParamCheckFail, msg: "活动已开始，不允许编辑"} and return unless @lottery.not_start?
+      render json: {code: ErrCode::ParamCheckFail, msg: "活动已结束，不允许编辑"} and return unless @lottery.start?
     end
   end
 end

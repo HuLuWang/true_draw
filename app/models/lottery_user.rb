@@ -1,11 +1,11 @@
 # 参与者
 class LotteryUser < ApplicationRecord
   belongs_to :lottery
-  belongs_to :user, foreign_key: :member_user_id
+  belongs_to :user
 
   def self.generate option
     LotteryUser.create!(
-                   member_user_id: option[:member_user_id],
+                   user_id: option[:user_id],
                    lottery_id: option[:lottery_id]
     )
   end

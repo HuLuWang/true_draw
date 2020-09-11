@@ -14,7 +14,7 @@ default: &default
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   host: 127.0.0.1
-  database: sz
+  database: true_draw_dev
   username: root
   password:
   charset: utf8mb4
@@ -27,6 +27,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
+  database: true_draw_test
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -49,6 +50,4 @@ test:
 #
 production:
   <<: *default
-  host: <%= ENV['SZ_MYSQL_HOST'] %>
-  username: <%= ENV['SZ_MYSQL_USERNAME'] %>
-  password: <%= ENV['SZ_MYSQL_PASSWORD'] %>
+  database: true_draw

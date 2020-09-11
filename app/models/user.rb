@@ -1,8 +1,16 @@
 class User < ApplicationRecord
-  self.table_name = "member_user"
 
   has_many :owner_lotteries, class_name: "Lottery", foreign_key: :created_by
-  has_many :part_lotteries, class_name: "Lottery", through: :lottery_users
+  has_many :lottery_users
+  has_many :lotteries, through: :lottery_users
+  has_many :user_addresses
 
+  def token
+    TokenService.encode({userId: self.id, source: 'true_draw'})
+  end
+
+  def default_address
+    self.user_addresses.where(state: 1).first
+  end
 
 end

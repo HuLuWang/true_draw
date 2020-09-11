@@ -4,12 +4,13 @@ class CreateLottery < ActiveRecord::Migration[6.0]
       t.string :image, null: false, comment: "活动主图"
       t.string :title, null: false, comment: "抽奖活动标题"
       t.text :content, null: false, comment: "抽奖活动描述"
-      t.string :lottery_type, null: false, default: "common", comment: "类型 common, multi, sz"
-      t.datetime :begin_time, null: false, default: -> {"CURRENT_TIMESTAMP"}
-      t.datetime :lottery_time, null: false, comment: "开奖时间"
-      t.string :state, limit: 32, null: false, comment: "not_start start end"
+      t.string :lottery_type, null: false, default: "simple", comment: "类型 simple, support, wheel"
+      t.string :condition, null: false
+      t.datetime :lottery_time, comment: "开奖时间"
+      t.integer :lottery_num, comment: "开奖人数"
+      t.string :state, limit: 32, null: false, default: "start", comment: "start, end"
       t.string :random_index, limit: 128, comment: "硬件真随机数index"
-      t.integer :created_by, null: false, comment: "创建人ID"
+      t.integer :created_by, null: false, comment: "创建人ID", index: true
       t.timestamps
     end
   end
