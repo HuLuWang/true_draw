@@ -12,7 +12,7 @@ class LotteryService
 
   # 获取奖池
   def user_pool
-    @user_pool = $redis.get("USER_POOL:#{@lottery.id}")
+    @user_pool =  $redis.lrange("USER_POOL:#{lottery.id}", 1, -1)
   end
 
   #开奖
