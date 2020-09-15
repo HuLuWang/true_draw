@@ -4,12 +4,28 @@ class LotteriesController < ApplicationController
 
   # 列表
   def index
-
+    page      = params[:page] || 1
+    page_size = params[:page_size] || 10
+    lotteries = Lottery.all.order(id: :desc)
+    if params[:state] == "start"
+      result    = lotteries.where(state: "start").page(page).per(page_size)
+    else
+      result    = lotteries.where(state: "end").page(page).per(page_size)
+    end
+    list      = result.map do |l|
+      l.detail_info
+    end
+    render json: {code: 200, msg: "success", data: {
+        list:      list,
+        page:      page,
+        page_size: page_size,
+        total:     result.total_count
+    }}
   end
 
   # 创建
   def create
-    option = params.merge!({user_id: @user.id})
+    option     = params.merge!({user_id: @user.id})
     lottery_id = Lottery.generate(option)
     render json: {code: 400, msg: "新建抽奖活动失败"} and return if lottery_id.nil?
     render json: {code: 200, msg: "success", data: {id: lottery_id}}
@@ -32,12 +48,12 @@ class LotteriesController < ApplicationController
   # 详情
   # 活动图 标题 状态 开奖时间 发起人 内容 奖品 中奖名单 是否中奖
   def show
-    lottery = Lottery.find params[:id]
+    lottery   = Lottery.find params[:id]
     is_winner = lottery.award_users.pluck(:user_id).include? @user.id
-    info    = lottery.detail_info.merge!(
-                                     {
-                                         is_winner: is_winner
-                                     }
+    info      = lottery.detail_info.merge!(
+        {
+            is_winner: is_winner
+        }
     )
     render json: {code: 200, msg: "success", data: {info: info}}
   end
@@ -46,8 +62,8 @@ class LotteriesController < ApplicationController
   # 不同活动有不同的参与规则
   def part_in
     lottery = Lottery.find params[:id]
-    render json: {code: 400, msg: "活动非开始状态"} and return unless lottery.start?
-    LotteryUser.generate({user_id: @user.id, lottery_id: params[:id]})
+    render json: {code: ErrCode::ActivityNotStart, msg: "活动非开始状态"} and return unless lottery.start?
+    LotteryUser.generate({user_id: @user.id, lottery_id: lottery.id})
     render json: {code: 200, msg: "success"}
   end
 
