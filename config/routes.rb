@@ -20,6 +20,7 @@ Rails.application.routes.draw do
         post :part_in
         get :part_list
         get :my_list
+        post :help_friend
       end
     end
 

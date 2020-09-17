@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_11_065621) do
+ActiveRecord::Schema.define(version: 2020_09_17_081646) do
 
   create_table "award", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin", comment: "奖品", force: :cascade do |t|
     t.integer "lottery_id", null: false, comment: "抽奖活动ID"
@@ -56,6 +56,16 @@ ActiveRecord::Schema.define(version: 2020_09_11_065621) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["lottery_id"], name: "index_lottery_user_on_lottery_id"
     t.index ["user_id"], name: "index_lottery_user_on_user_id"
+  end
+
+  create_table "ticket_pool_log", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin", comment: "票池", force: :cascade do |t|
+    t.integer "lottery_id", null: false, comment: "活动Id"
+    t.integer "user_id", null: false, comment: "用户ID"
+    t.integer "help_user_id", comment: "参与助力的用户"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["lottery_id"], name: "index_ticket_pool_log_on_lottery_id"
+    t.index ["user_id"], name: "index_ticket_pool_log_on_user_id"
   end
 
   create_table "user", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin", comment: "用户", force: :cascade do |t|

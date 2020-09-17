@@ -90,6 +90,17 @@ class LotteriesController < ApplicationController
     render json: {code: 200, msg: "success", data: {list: list}}
   end
 
+  # 参与助力
+  # 用户要先授权
+  def help_friend
+    lottery_user = LotteryUser.where(lottery_id: params[:lottery_id],user_id: params[:user_id]).first
+    render json: {code: ErrCode::UserNotPart, msg: "邀请者未参与活动"} and return if lottery_user.nil?
+    log = TicketPoolLog.where(lottery_id: params[:lottery_id], user_id: params[:user_id], help_user_id: @user.id).first
+    render json: {code: ErrCode::ALREADYHELP, msg: "已帮此好友助力过了，自己也快来参与吧"} and return if log.present?
+    @user.help_friend({user_id: params[:user_id], lottery_id: params[:lottery_id]})
+    render json: {code: 200, msg: "success"}
+  end
+
   private
 
   def lottery_params_check

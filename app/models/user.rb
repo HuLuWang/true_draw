@@ -13,4 +13,12 @@ class User < ApplicationRecord
     self.user_addresses.where(state: 1).first
   end
 
+  def help_friend option
+    TicketPoolLog.create!(
+                     lottery_id: option[:lottery_id],
+                     user_id: option[:user_id],
+                     help_user_id: self.id
+    )
+  end
+
 end
