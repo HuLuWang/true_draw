@@ -1,0 +1,6 @@
+sync_chain_tokens_job:
+  cron: "0 2 * * *"
+  class: SyncChainTokensJob
+  queue: default
+  desc: "异步同步订单表-每日凌晨2点跑"
+

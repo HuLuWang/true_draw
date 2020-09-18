@@ -6,8 +6,8 @@ class Lottery < ApplicationRecord
   belongs_to :owner, foreign_key: :created_by, class_name: "User"
 
   enum state: {:start => "start", :end => "end"}
+  enum condition: {:open_by_time => "time", :open_by_num => "num"}
 
-  # todo 按时抽奖的加入队列
   def self.generate option
     ActiveRecord::Base.transaction do
       # 获取index
