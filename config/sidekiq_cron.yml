@@ -1,6 +1,6 @@
-sync_chain_tokens_job:
-  cron: "0 2 * * *"
-  class: SyncChainTokensJob
+cron_run_lottery_job:
+  cron: "0 0/1 * * *"
+  class: CronRunLotteryJob
   queue: default
-  desc: "异步同步订单表-每日凌晨2点跑"
+  desc: "活动开奖job"
 
