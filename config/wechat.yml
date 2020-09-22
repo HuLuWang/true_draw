@@ -14,9 +14,9 @@ staging:
   token: 21cc7e4e93b5d813281be8f0ec83aaa9
 
 production:
-  app_id: <%= ENV['SZ_ACTIVITY_WECHAT_APP_ID'] %>
-  secret: <%= ENV['SZ_ACTIVITY_WECHAT_SECRET'] %>
-  token: <%= ENV['SZ_ACTIVITY_WECHAT_TOKEN'] %>
+  app_id: <%= ENV['TRUE_DRAW_APP_ID'] || wxcff9ac0fa9bf3805 %>
+  secret: <%= ENV['TRUE_DRAW_SECRET'] || 1a1a87147ce148bd57c87ab5cb899641 %>
+  token: <%= ENV['TRUE_DRAW_TOKEN'] || 21cc7e4e93b5d813281be8f0ec83aaa9 %>
 
 
 
