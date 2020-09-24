@@ -49,16 +49,15 @@
 \
 ...
 
-### 后端服务
-path: server
-
 建库
 > rails db:migrate
 
 项目启动
-> rails s -p 3000 -d -b 0.0.0.0
+> rails s -p 端口号 -d -b 0.0.0.0
 
-### 前端服务
+### log
+9-17 \
+为避免重复助力，由redis的list改为添加一张助力log表
 
-暂时选定使用 taro UI 进行开发，有没有前端小伙伴愿意用爱发电
+
 
